@@ -35,6 +35,8 @@ jobs:
     dockerize:
       machine: true
       steps:
+      - attach_workspace:
+          at: .
       - checkout
       # Login to docker
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -52,6 +54,6 @@ workflows:
             - package:
                   requires:
                       - test
-            -dockerize:
+            - dockerize:
                   requires:
                       - package
