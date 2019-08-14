@@ -6,12 +6,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: The First Step
+          name: Gradle test
           command: |
             gradle test
+      - run:
+          name: Gradle Jar
+          command: |
             gradle jar
       - store_test_results:
           path: build/test-results
       - store_artifacts:
-          path: /code/artifact
+          path: build/libs
           destination: prefix
