@@ -11,6 +11,9 @@ jobs:
             gradle test
       - store_test_results:
           path: build/test-results
+      - persist_to_workspace:
+          root: .
+          paths: .
       - attach_workspace:
           at: /tmp/workspace
 
