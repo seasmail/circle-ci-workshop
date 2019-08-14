@@ -1,41 +1,43 @@
 version: 2.0
 jobs:
-  test:
-    docker:
-      - image: circleci/openjdk:8-jdk 
-    steps:
-      - checkout
-      - run:
-          name: Gradle test
-          command: |
-            gradle test
-      - store_test_results:
-          path: build/test-results
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
+    test:
+        docker:
+            - image: circleci/openjdk:8-jdk
+        steps:
+            - checkout
+            - run:
+                  name: Gradle Test
+                  command:
+                      gradle test
+            - store_test_results:
+                  path: build/test-results
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+    package:
+        docker:
+            - image: circleci/openjdk:8-jdk
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Gradle Jar
+                command:
+                    gradle jar
+            - store_artifacts:
+                path: build/libs
+                destination: prefix\
+            - persist_to_workspace:
+                  root: build/libs
+                  paths:
+                      - .
 
-
-  package:
-    docker:
-    - image: circleci/openjdk:8-jdk
-    steps:
-    - attach_workspace:
-        at: .
-    - run:
-        name: Gradle Jar
-        command: |
-          gradle jar
-    - store_artifacts:
-        path: build/libs
-        destination: prefix
-
-workflow:
-  version: 2
-  build_and_test:
-    jobs:
-      - test
-      - package:
-          requires:
-            -test
+workflows:
+    version: 2
+    two_job_flow:
+        jobs:
+            - test
+            - package:
+                  requires:
+                      - test
